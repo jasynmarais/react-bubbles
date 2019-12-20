@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { Formik, Field, Form } from 'formik';
 import axiosWithAuth from '../utils/axiosWithAuth';
 
@@ -7,14 +7,16 @@ const loginPath = 'http://localhost:5000/api/login';
 const Login = props => {
   const onLogin = ({ username, password }) => {
     axiosWithAuth()
-    .post(loginPath, { username, password })
-    .then(res => {
-      localStorage.setItem('token', res.data.payload);
-      props.history.push('/bubbles');
-    })
-    .catch(err => console.log(err));
+      .post(loginPath, { username, password })
+      .then(res => {
+        localStorage.setItem('token', res.data.payload);
+        props.history.push('/bubbles');
+      })
+      .catch(error => {
+        localStorage.clear();
+        alert(error.response.data.message);
+      });
   };
-
   return (
     <div className='login-container'>
       <h1 className='title'>Welcome to the Bubble App!</h1>

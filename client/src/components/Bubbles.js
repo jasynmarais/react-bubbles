@@ -1,20 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { Pack } from "@potion/layout";
-import { Svg, Circle } from "@potion/element";
+import React, { useState, useEffect } from 'react';
+import { Pack } from '@potion/layout';
+import { Svg, Circle } from '@potion/element';
 
 const Bubbles = ({ colors }) => {
   const [bubbleData, setBubbleData] = useState([]);
+
   useEffect(() => {
-    const generateBubbleData = colors.map((_, i) => ({
-      value: Math.floor(Math.random() * (colors.length * 2)) + 1,
-      key: `${i + 1}`
-    }));
+    const generateBubbleData = () => {
+      return colors.map((_, i) => ({
+        value: Math.floor(Math.random() * (colors.length * 2)) + 1,
+        key: `${i + 1}`
+      }));
+    };
     setBubbleData(generateBubbleData);
+
+    const updateBubblesInterval = setInterval(() => {
+      setBubbleData(generateBubbleData);
+    }, 2500);
+
+    return () => clearInterval(updateBubblesInterval);
   }, [colors]);
 
   return (
-    <div className="bubble-wrap">
+    <div className='bubble-wrap'>
       <p>bubbles</p>
+      {/*<button>Click me</button>*/}
       <Svg width={400} height={400}>
         <Pack
           data={{
@@ -38,6 +48,14 @@ const Bubbles = ({ colors }) => {
                       r={r}
                       fill={colors[i].code.hex}
                     />
+                    // <Rect
+                    //   key={key}
+                    //   x={x}
+                    //   y={y}
+                    //   width={r}
+                    //   height={100}
+                    //   fill={colors[i].code.hex}
+                    // />
                   );
                 }
                 return null;

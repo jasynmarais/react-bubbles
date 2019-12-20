@@ -1,13 +1,37 @@
-import React from "react";
+import React from 'react';
+import { Formik, Field, Form } from 'formik';
+import axiosWithAuth from '../utils/axiosWithAuth';
 
-const Login = () => {
-  // make a post request to retrieve a token from the api
-  // when you have handled the token, navigate to the BubblePage route
+const loginPath = 'http://localhost:5000/api/login';
+
+const Login = props => {
+  const onLogin = ({ username, password }) => {
+    axiosWithAuth()
+      .post(loginPath, { username, password })
+      .then(res => {
+        localStorage.setItem('token', res.data.payload);
+        props.history.push('/bubbles');
+      })
+      .catch(error => {
+        localStorage.clear();
+        alert(error.response.data.message);
+      });
+  };
   return (
-    <>
-      <h1>Welcome to the Bubble App!</h1>
-      <p>Build a login page here</p>
-    </>
+    <div className='login-container'>
+      <h1 className='title'>Welcome to the Bubble App!</h1>
+      <Formik
+        initialValues={{ username: '', password: '' }}
+        onSubmit={onLogin}
+        render={() => (
+          <Form className='login'>
+            <Field name='username' type='text' placeholder='Username' />
+            <Field name='password' type='text' placeholder='Password' />
+            <input className='button submit-button' type='Submit' />
+          </Form>
+        )}
+      />
+    </div>
   );
 };
 
